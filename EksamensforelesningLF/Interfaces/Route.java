@@ -1,0 +1,127 @@
+package EksamensforelesningLF.Interfaces;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+public class Route implements Iterable<Post> {
+    
+    // TODO: necessary fields and initialisation
+
+	List<Post> routePosts = new ArrayList<>();
+
+	/**
+	 * Initializes this route with the provided posts.
+	 *
+	 * @param posts the posts in-order
+	 */
+	public Route(final Iterator<Post> posts) {
+		// TODO: initialisation
+		while (posts.hasNext()) {
+			this.routePosts.add(posts.next());
+		}
+	}
+
+	/**
+	 * Initializes this route with the provided posts.
+	 *
+	 * @param posts the posts in-order
+	 */
+	public Route(final Iterable<Post> posts) {
+		// TODO: initialisation
+		Iterator<Post> iterator = posts.iterator();
+
+		while (iterator.hasNext()) {
+			this.routePosts.add(iterator.next());
+		}
+	}
+
+	/**
+	 * Initializes this route with the provided posts.
+	 *
+	 * @param posts the posts in-order
+	 */
+	public Route(final Collection<Post> posts) {
+		// TODO: initialisation
+		for (Post post : posts) {
+			this.routePosts.add(post);
+		}
+	}
+
+	/**
+	 * Gets the number of legs.
+	 *
+	 * @return the number of legs
+	 */
+	public int getLegCount() {
+		// TODO
+		return routePosts.size()-1;
+	}
+
+	/**
+	 * Gets the specific leg in the sequence of legs.
+	 *
+	 * @param num the number in the sequence
+	 * @return the leg with the specified number
+	 */
+	public Leg getLeg(final int num) {
+		// TODO
+		return new Leg(routePosts.get(num-1),routePosts.get(num));
+	}
+
+	/**
+	 * Gets an iterator that returns the posts in sequence.
+	 */
+	@Override
+	public Iterator<Post> iterator() {
+		// TODO
+		return routePosts.iterator();
+	}
+
+	/**
+	 * Computes the total distance of this route, as the sum of the leg distances.
+	 *
+	 * @return the total distance of this route
+	 */
+	public double distance() {
+		// TODO
+		double distance = 0;
+		for (int i = 0; i < routePosts.size()-1; i++) {
+			distance += getLeg(i).distance();
+		}
+
+		return distance;
+	}
+
+	//
+
+	/**
+	 * Computes the sum of the distances between the provided posts,
+	 * if visited in-order.
+	 *
+	 * @return the total distance of this sequence of posts
+	 */
+	public static double distance(final Iterable<Post> posts) {
+		// TODO
+		return new Route(posts).distance();
+	}
+
+	/**
+	 * Computes the sum of the distances between the provided posts,
+	 * if visited in-order.
+	 *
+	 * @return the total distance of this sequence of posts
+	 */
+	public static double distance(final Iterator<Post> posts) {
+		// TODO
+		return new Route(posts).distance();
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return routePosts.toString();
+	}
+
+}
