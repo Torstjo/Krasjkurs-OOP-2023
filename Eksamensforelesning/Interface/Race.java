@@ -1,5 +1,8 @@
 package Eksamensforelesning.Interface;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -7,6 +10,10 @@ import java.util.List;
 public class Race implements Iterable<Post> {
 
 	// TODO: necessary fields and initialisation
+	private Post startPost;
+	private Post finishPost;
+
+	private List<Post> intermediatePosts = new ArrayList<>();
 
 	/**
 	 * Initializes this race with the provided start and finish post.
@@ -17,6 +24,11 @@ public class Race implements Iterable<Post> {
 	 */
 	public Race(final Post startPost, final Post finishPost) {
 		// TODO: initialisation
+		if (startPost == null || finishPost == null) {
+			throw new IllegalArgumentException("The posts cannot be null!");
+		}
+		this.startPost = startPost;
+		this.finishPost = finishPost;
 	}
 
 	/**
@@ -27,6 +39,7 @@ public class Race implements Iterable<Post> {
 	 */
 	public Race(final Post startFinishPost) {
 		// TODO: initialisation
+		this(startFinishPost, startFinishPost);
 	}
 
 	/**
@@ -34,7 +47,7 @@ public class Race implements Iterable<Post> {
 	 */
 	public Post getStartPost() {
 		// TODO
-		return null;
+		return this.startPost;
 	}
 
 	/**
@@ -42,7 +55,11 @@ public class Race implements Iterable<Post> {
 	 */
 	public Post getFinishPost() {
 		// TODO
-		return null;
+		return this.finishPost;
+	}
+
+	public List<Post> getIntermediatePosts() {
+		return intermediatePosts;
 	}
 
 	/**
@@ -50,7 +67,7 @@ public class Race implements Iterable<Post> {
 	 */
 	public int getPostCount() {
 		// TODO
-		return 0;
+		return intermediatePosts.size()+2;
 	}
 
 	/**
@@ -58,16 +75,33 @@ public class Race implements Iterable<Post> {
 	 * @return the post with index num, start post is index 0 and finish post comes last
 	 */
 	public Post getPost(final int num) {
+		if (num == 0) {
+			return startPost;
+		}
+		else if (num == getPostCount() - 1) {
+			return finishPost;
+		}
 		// TODO
-		return null;
+		return intermediatePosts.get(num-1);
 	}
 
 	/**
 	 * @return all the posts in the order of index, i.e. start first, finish last
 	 */
 	public Post[] getPosts() {
-		// TODO
-		return new Post[0];
+		List<Post> allPosts = new ArrayList<>();
+		allPosts.add(startPost);
+		allPosts.addAll(intermediatePosts);
+		allPosts.add(finishPost);
+		return allPosts.toArray(new Post[allPosts.size()]);
+	}
+
+	public List<Post> getAllPosts() {
+		List<Post> allPosts = new ArrayList<>();
+		allPosts.add(startPost);
+		allPosts.addAll(intermediatePosts);
+		allPosts.add(finishPost);
+		return allPosts;
 	}
 
 	/**
@@ -76,7 +110,22 @@ public class Race implements Iterable<Post> {
 	@Override
 	public Iterator<Post> iterator() {
 		// TODO
-		return Collections.emptyIterator();
+		//return new Iterator<Post>() {
+
+		//	private int pos = 0;
+
+		//	@Override
+		//	public boolean hasNext() {
+		//		return pos < getPostCount();
+		//	}
+
+		//	@Override
+		//	public Post next() {
+		//		return getPost(pos++);
+		//	}
+
+		//};
+		return getAllPosts().iterator();
 	}
 
 	/**
@@ -87,6 +136,10 @@ public class Race implements Iterable<Post> {
 	 */
 	public void removePost(final Post post) {
 		// TODO
+		if (!intermediatePosts.contains(post)) {
+			throw new IllegalArgumentException("The provided post is not in this race!");
+		}
+		intermediatePosts.remove(post);
 	}
 
 	/**
@@ -99,7 +152,13 @@ public class Race implements Iterable<Post> {
 	 */
 	public Iterator<Post> findPostsNearby(final double east, final double north, final double distance) {
 		// TODO
-		return Collections.emptyIterator();
+		Collection<Post> nearbyPosts = new ArrayList<>();
+		for (Post post : getAllPosts()) {
+			if (Post.distance(post, east, north) < distance) {
+				nearbyPosts.add(post);
+			}
+		}
+		return nearbyPosts.iterator();
 	}
 
 	/**
@@ -116,8 +175,14 @@ public class Race implements Iterable<Post> {
 	 * @throws IllegalArgumentException if the post is too close to another post (see distanceEpsilon)
 	 */
 	public Post addPost(final double east, final double north) {
-		// TODO
-		return null;
+		Iterator<Post> nearbyPosts = findPostsNearby(east, north, distanceEpsilon);
+		if (nearbyPosts.hasNext()) {
+			throw new IllegalArgumentException("This post is too close to another!");
+		}
+
+		Post newPost = new Post(east, north);
+		intermediatePosts.add(newPost);
+		return newPost;
 	}
 
 	/**
@@ -127,7 +192,9 @@ public class Race implements Iterable<Post> {
 	 * the third postNum=3 and the finish post postNum=4.
 	 */
 	public void assignPostNums() {
-		// TODO
+		for (int i = 0; i < getPostCount(); i++) {
+			getPost(i).setPostNum(i);
+		}
 	}
 
 	//

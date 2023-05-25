@@ -7,6 +7,10 @@ public class Post {
 
 	// TODO: necessary fields and initialisation
 
+	private double east;
+	private double north;
+	private int postNum = -1;
+
 	/**
 	 * Initializes this post with the provided positions.
 	 * The postNum is initially unassigned, i.e. -1.
@@ -16,6 +20,8 @@ public class Post {
 	 */
 	public Post(final double east, final double north) {
 		// TODO: initialisation
+		this.east = east;
+		this.north = north;
 	}
 
 	/**
@@ -25,10 +31,14 @@ public class Post {
 	@Override
 	public String toString() {
 		// TODO: return a suitable String
-		return "";
+		return this.getPostNum()+"";
 	}
 
 	// TODO: methods including getters og setters, that you find necessary and useful
+
+	public int getPostNum() {
+		return postNum;
+	}
 
 	/**
 	 * Assigns the post number, which can only be done once.
@@ -39,6 +49,13 @@ public class Post {
 	 */
 	public void setPostNum(final int postNum) {
 		// TODO: correkt behaviour
+		if (!(postNum >= 0)) {
+			throw new IllegalArgumentException("Invalid postNum!");
+		}
+		else if (getPostNum() != -1) {
+			throw new IllegalStateException("The postNum has already been set!");
+		}
+		this.postNum = postNum;
 	}
 
 	/**
@@ -46,7 +63,7 @@ public class Post {
 	 */
 	public double getEast() {
 		// TODO - return correct value
-		return 0.0;
+		return this.east;
 	}
 
 	/**
@@ -54,7 +71,7 @@ public class Post {
 	 */
 	public double getNorth() {
 		// TODO - return correct value
-		return 0.0;
+		return this.north;
 	}
 
 	/**
@@ -80,7 +97,7 @@ public class Post {
 	 */
 	public double distance(final double east, final double north) {
 		// TODO: return correct value
-		return 0.0;
+		return Post.distance(getEast(), getNorth(), east, north);
 	}
 
 	/**
@@ -91,7 +108,7 @@ public class Post {
 	 */
 	public double distance(final Post post2) {
 		// TODO: return correct value
-		return 0.0;
+		return Post.distance(this, post2);
 	}
 
 	/**
@@ -104,7 +121,7 @@ public class Post {
 	 */
 	public static double distance(final Post post, final double east, final double north) {
 		// TODO: return correct value
-		return 0.0;
+		return Post.distance(post.getEast(), post.getNorth(), east, north);
 	}
 
 	/**
@@ -116,7 +133,7 @@ public class Post {
 	 */
 	public static double distance(final Post post1, final Post post2) {
 		// TODO: return correct value
-		return 0.0;
+		return Post.distance(post1.getEast(), post1.getNorth(), post2.getEast(), post2.getNorth());
 	}
 
 	// sample main-method, for testing

@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class ScannerTest {
     
     public static void main(String[] args) throws IOException{
-        Scanner scanner = new Scanner(new File("minegenkode/src/main/java/Eksamensforelesning/Filbehandling/ExampleFile.txt"));
+        Scanner scanner = new Scanner(new File("Eksamensforelesning/Filbehandling/ExampleFile.txt"));
         String line = null;
         while (scanner.hasNext()) {
             line = scanner.nextLine();

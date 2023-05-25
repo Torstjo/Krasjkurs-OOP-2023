@@ -8,7 +8,14 @@ public class PredicateTest {
     private PredicateInterface pred = new PredicateInterface();
     
     public Collection<Integer> numberFilter(Integer... tall) {
-        return null;
+        Collection<Integer> numList = new ArrayList<>();
+        for (Integer integer : tall) {
+            if (pred.test(integer)) {
+                numList.add(integer);
+            }
+        }
+
+        return numList;
     }
 
     public static void main(String[] args) {

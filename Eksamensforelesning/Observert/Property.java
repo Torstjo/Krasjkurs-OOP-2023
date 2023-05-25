@@ -1,7 +1,18 @@
 package Eksamensforelesning.Observert;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class Property {
     // Add any needed fields here
+
+    private String name;
+    private int price;
+    private boolean isSold = false;
+
+    private Collection<Bid> bids = new ArrayList<>();
+    private Collection<BidListener> listeners = new ArrayList<>();
+    private Collection<BidListener> highBidListeners = new ArrayList<>();
  
     /**
      *
@@ -9,7 +20,8 @@ public class Property {
      * @param price the listing price of the property
      */
     public Property(String name, int price) {
-        // TODO
+        this.name = name;
+        this.price = price;
     }
  
     /**
@@ -18,7 +30,7 @@ public class Property {
      */
     public String getName() {
         // TODO
-        return null;
+        return name;
     }
  
     /**
@@ -27,7 +39,7 @@ public class Property {
      */
     public int getPrice() {
         // TODO
-        return 0;
+        return price;
     }
  
     /**
@@ -36,7 +48,7 @@ public class Property {
      */
     public boolean isSold() {
         // TODO
-        return false;
+        return isSold;
     }
  
     /**
@@ -46,6 +58,10 @@ public class Property {
      */
     public void setIsSold() {
         // TODO
+        if (bids.size() == 0) {
+            throw new IllegalStateException();
+        }
+        this.isSold = true;
     }
  
     /**
@@ -54,7 +70,7 @@ public class Property {
      */
     public int getNumberOfBids() {
         // TODO
-        return 0;
+        return bids.size();
     }
  
     /**
@@ -63,6 +79,7 @@ public class Property {
      */
     public void addListenerForAllBids(BidListener listener) {
         // TODO
+        listeners.add(listener);
     }
  
     /**
@@ -74,6 +91,7 @@ public class Property {
      */
     public void addListenerForHighestBids(BidListener listener) {
         // TODO
+        highBidListeners.add(listener);
     }
  
     /**
@@ -82,7 +100,13 @@ public class Property {
      *                 the above methods
      */
     public void removeListener(BidListener listener) {
-        // TODO
+        if (listeners.contains(listener)) {
+            listeners.remove(listener);
+        }
+        
+        if (highBidListeners.contains(listener)) {
+            highBidListeners.remove(listener);
+        }
     }
  
     /**
@@ -94,7 +118,14 @@ public class Property {
      * @throws IllegalStateException - if the property is already sold
      */
     public void bidReceived(String bidder, int bid) {
-        // TODO
+        if (isSold()) {
+            throw new IllegalStateException();
+        }
+
+        Bid newBid = new Bid(bidder, this, bid);
+        bids.add(newBid);
+
+        notifyListeners(newBid);
     }
  
     /**
@@ -107,7 +138,9 @@ public class Property {
      * @param bid the most recent bid
      */
     void notifyListeners(Bid bid) {
-        // TODO
+        for (BidListener listener : listeners) {
+            listener.propertyBid(bid);
+        }
     }
  
     /**
@@ -116,7 +149,7 @@ public class Property {
      */
     public int getHighestBid() {
         // TODO
-        return 0;
+        return bids.stream().mapToInt(bid -> bid.getBid()).max().orElse(0);
     }
  
     public static void main(String[] args) {

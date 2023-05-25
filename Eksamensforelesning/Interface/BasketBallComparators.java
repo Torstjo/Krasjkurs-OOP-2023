@@ -35,7 +35,16 @@ public class BasketBallComparators {
 	 */
 	public static Comparator<Player> getHeightComparator() {
 		// TODO
-		return null;
+		class HeightComparator implements Comparator<Player> {
+
+			@Override
+			public int compare(Player o1, Player o2) {
+				// TODO Auto-generated method stub
+				return o2.getHeight() - o1.getHeight();
+			}
+
+		};
+		return new HeightComparator();
 	}
 
 	/**
@@ -50,7 +59,47 @@ public class BasketBallComparators {
 	 */
 	public static Comparator<Player> getTrueShootingPercentageComparator() {
 		// TODO
-		return null;
+		class TSComparator implements Comparator<Player> {
+
+			@Override
+			public int compare(Player o1, Player o2) {
+				// TODO Auto-generated method stub
+				int p1Points = 0;
+				int p1FieldGoals = 0;
+				int p1FreeThrows = 0;
+
+				for (PlayerGameStat game : o1.getSeasonStats()) {
+					p1Points += game.getPointsScored();
+					p1FieldGoals += game.getFieldGoalAttempts();
+					p1FreeThrows += game.getFreeThrowAttempts();
+				}
+
+				int p2Points = 0;
+				int p2FieldGoals = 0;
+				int p2FreeThrows = 0;
+
+				for (PlayerGameStat game : o2.getSeasonStats()) {
+					p2Points += game.getPointsScored();
+					p2FieldGoals += game.getFieldGoalAttempts();
+					p2FreeThrows += game.getFreeThrowAttempts();
+				}
+
+				double p1TS = p1Points / (2 * (p1FieldGoals + (0.44 * p1FreeThrows)));
+				double p2TS = p2Points / (2 * (p2FieldGoals + (0.44 * p2FreeThrows)));
+
+				if (p2TS > p1TS) {
+					return 1;
+				}
+				else if (p2TS < p1TS) {
+					return -1;
+				}
+				else {
+					return 0;
+				}
+			}
+
+		};
+		return new TSComparator();
 	}
 
 	public static void main(String[] args) {

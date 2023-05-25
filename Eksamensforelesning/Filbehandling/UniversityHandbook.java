@@ -39,6 +39,25 @@ public class UniversityHandbook {
                 String line = scanner.nextLine();
                 String[] details = line.split(",");
                 // TODO - Continue implementation here
+                if (getCourse(details[0]) != null) {
+                    getCourse(details[0]).setAverageGrade(Double.parseDouble(details[1]));
+                }
+                else {
+                    Course course = new Course(details[0], Double.parseDouble(details[1]));
+                    courses.add(course);
+                }
+                if (details.length > 2) {
+                    for (int i = 2; i < details.length; i++) {
+                        if (getCourse(details[i]) != null) {
+                            getCourse(details[0]).addPrequisite(getCourse(details[i]));
+                        }
+                        else {
+                            Course course = new Course(details[i]);
+                            courses.add(course);
+                            getCourse(details[0]).addPrequisite(course);
+                        }
+                    }
+                }
             }
         }
     }
@@ -51,12 +70,12 @@ public class UniversityHandbook {
      * @return The course with the given name
      */
     public Course getCourse(String courseName) {
-        ...
+        return courses.stream().filter(course -> course.getCourseName().equals(courseName)).findFirst().orElse(null);
     }
 
     public static void main(String[] args) throws FileNotFoundException {
         UniversityHandbook uh = new UniversityHandbook();
-        uh.readFromInputStream(new FileInputStream("minegenkode/src/main/java/Eksamensforelesning/Filbehandling/course.txt"));
+        uh.readFromInputStream(new FileInputStream("Eksamensforelesning/Filbehandling/course.txt"));
         Course course = uh.getCourse("TDT4100");
         System.out.println(course.getCourseName());
         System.out.println(course.getAverageGrade());

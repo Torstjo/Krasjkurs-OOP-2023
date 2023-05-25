@@ -1,16 +1,20 @@
 package Eksamensforelesning.Interface;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MovieRegister {
     // Add internal variables
+	private Collection<MovieKont20> db = new ArrayList<>();
 	
 	/**
 	 * Add movie to register
 	 * @param movie
 	 */
-	public void addMovie(Movie movie) {
+	public void addMovie(MovieKont20 movie) {
+		db.add(movie);
 	}
 		
 	/**
@@ -18,8 +22,8 @@ public class MovieRegister {
 	 * @param title
 	 * @return the movie with matching title, or null if no such movie exists.
 	 */
-	Movie findMovie(String title) {
-		return null; // dummy return value
+	MovieKont20 findMovie(String title) {
+		return db.stream().filter(movie -> movie.getTitle().equals(title)).findFirst().orElse(null);
 	}
 	
 	/**
@@ -27,8 +31,8 @@ public class MovieRegister {
 	 * @param pred is the filter for which movies to watch
 	 * @return A collection of movies testing true to pred.
 	 */
-	Collection<Movie> filterMovies(Predicate<Movie> pred) {
-		return null; // dummy return value
+	Collection<MovieKont20> filterMovies(Predicate<MovieKont20> pred) {
+		return db.stream().filter(pred).collect(Collectors.toList()); // dummy return value
 	}
 	
 	/**
@@ -37,6 +41,10 @@ public class MovieRegister {
 	 * @throws IllegalStateException if the title does not exist.
 	 */
 	public void watch(String title) {
+		if (findMovie(title) == null) {
+			throw new IllegalStateException();
+		}
+		findMovie(title).watch();
 	}
 	
 	/**
@@ -45,10 +53,10 @@ public class MovieRegister {
 	 */
 	public static void main(String[] args) {
 		
-//		MovieRegister cb = new MovieRegister();
-//		cb.addMovie(new Movie("Das Boot"));
-//		cb.watch("Das Boot");
-//		System.out.println("Should be 1: " + cb.findMovie("Das Boot").getTimesWatched());
+		MovieRegister cb = new MovieRegister();
+		cb.addMovie(new MovieKont20("Das Boot"));
+		cb.watch("Das Boot");
+		System.out.println("Should be 1: " + cb.findMovie("Das Boot").getTimesWatched());
 		
 	}
 

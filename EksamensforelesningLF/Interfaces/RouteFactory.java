@@ -50,8 +50,6 @@ import java.util.List;
 		 return createRoute(posts.get(0), posts.subList(1, lastIndex), posts.get(lastIndex));
 	 }
  
-	 // RouteFactories
- 
 	 public final static RouteFactory ALL_POSTS_IN_ORDER = (start, between, finish) -> {
 		 final List<Post> posts = new ArrayList<>(between);
 		 posts.add(0, start);

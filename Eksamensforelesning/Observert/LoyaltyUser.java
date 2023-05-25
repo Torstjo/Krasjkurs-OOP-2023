@@ -1,6 +1,7 @@
 package Eksamensforelesning.Observert;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class LoyaltyUser {
@@ -9,6 +10,8 @@ public class LoyaltyUser {
     private String status;
     public static List<String> validStatuses = Arrays.asList("Basic", "Gold", "Silver", "Platinum");
     // TODO - Add any extra needed fields here
+
+    private HashMap<StatusListener, String> listeners = new HashMap<>();
  
     public LoyaltyUser(String username) {
         this.username = username;
@@ -43,6 +46,8 @@ public class LoyaltyUser {
      * status should be notified
      */
     public void checkForStatusUpgrade() {
+        String oldStatus = getStatus();
+
         if (this.points <= 1000) {
             this.status = "Basic";
         }
@@ -54,6 +59,10 @@ public class LoyaltyUser {
         }
         if (this.points > 10000) {
             this.status = "Platinum";
+        }
+
+        if (!(oldStatus == getStatus())) {
+            fireStatusChanged(oldStatus, oldStatus);
         }
     }
  
@@ -69,8 +78,11 @@ public class LoyaltyUser {
      * @throws IllegalArgumentException If the status is not valid
      */
     public void addListener(StatusListener listener, String status) {
-        ...
- 
+        if (!(validStatuses.contains(status))) {
+            throw new IllegalArgumentException();
+        }
+
+        listeners.put(listener, status);
     }
  
     /**
@@ -79,7 +91,7 @@ public class LoyaltyUser {
      * @param listener The listener to remove
      */
     public void removeListener(StatusListener listener) {
-        ...
+        listeners.remove(listener);
     }
  
     /**
@@ -92,6 +104,10 @@ public class LoyaltyUser {
      * @param newStatus The new status of the user
      */
     private void fireStatusChanged(String oldStatus, String newStatus) {
-        ...
+        for (StatusListener listener : listeners.keySet()) {
+            if (listeners.get(listener) == oldStatus || listeners.get(listener) == newStatus) {
+                listener.statusChanged(username, oldStatus, newStatus);
+            }
+        }
     }
 }

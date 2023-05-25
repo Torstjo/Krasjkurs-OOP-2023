@@ -1,4 +1,4 @@
-package Eksamensforelesning.Arv;
+package Eksamensforelesning.Observert;
 
 public class BusinessProperty extends Property {
     /**
@@ -9,6 +9,14 @@ public class BusinessProperty extends Property {
  
      public BusinessProperty(String name, int price) {
         super(name, price);
+    }
+
+    @Override
+    public void bidReceived(String bidder, int price) {
+        super.bidReceived(bidder, price);
+        if (price >= super.getPrice()) {
+            super.setIsSold();
+        }
     }
  
     public static void main(String[] args) {

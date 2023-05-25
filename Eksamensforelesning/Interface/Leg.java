@@ -7,6 +7,8 @@ package Eksamensforelesning.Interface;
 public class Leg {
 
 	// TODO: necessary fields and initialisation
+	private Post startPost;
+	private Post endPost;
 
 	/**
 	 * Initializes this Leg with the provided start and end post.
@@ -16,6 +18,8 @@ public class Leg {
 	 */
 	public Leg(final Post startPost, final Post endPost) {
 		// TODO: initialization
+		this.startPost = startPost;
+		this.endPost = endPost;
 	}
 
 	/**
@@ -33,7 +37,7 @@ public class Leg {
 	 */
 	public Post getStartPost() {
 		// TODO
-		return null;
+		return this.startPost;
 	}
 
 	/**
@@ -41,7 +45,7 @@ public class Leg {
 	 */
 	public Post getEndPost() {
 		// TODO
-		return null;
+		return this.endPost;
 	}
 
 	// TODO: methods including getters og setters, that you find necessary and useful
@@ -53,7 +57,7 @@ public class Leg {
 	 */
 	public double distance() {
 		// TODO: return correct value
-		return 0.0;
+		return Post.distance(startPost, endPost);
 	}
 }
 

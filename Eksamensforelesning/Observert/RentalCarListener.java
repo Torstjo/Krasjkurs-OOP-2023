@@ -1,14 +1,24 @@
 package Eksamensforelesning.Observert;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RentalCarListener implements StatusListener {
     // TODO - Add any needed fields here
+
+    private Map<String, Integer> rebates = new HashMap<>();
  
     @Override
     /**
      * Method that should be called when a given userName has updated its status.
      */
     public void statusChanged(String username, String oldStatus, String newStatus) {
-        /// TODO
+        if (newStatus == "Gold") {
+            rebates.put(username, 100);
+        }
+        else {
+            rebates.put(username, 0);
+        }
     }
  
     /**
@@ -21,6 +31,6 @@ public class RentalCarListener implements StatusListener {
      */
     public int getDiscount(String username) {
         // TODO
-        return 0;
+        return rebates.get(username);
     }
 }

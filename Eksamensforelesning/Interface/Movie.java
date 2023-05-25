@@ -3,30 +3,36 @@ package Eksamensforelesning.Interface;
 import java.util.ArrayList;
 import java.util.Collections;
 
-class Movie implements Comparable<Movie>
-{
-    private int rating;
-    private String name;
-    private int year;
+class Movie implements Comparable<Movie> {
 
-    // Constructor
-    public Movie(String nm, int rt, int yr)
-    {
-        this.name = nm;
-        this.rating = rt;
-        this.year = yr;
+    private int rating;
+    private int year;
+    private String name;
+
+    public Movie(String name, int rating, int year) {
+        this.rating = rating;
+        this.year = year;
+        this.name = name;
     }
- 
-    // Used to sort movies by year
-    public int compareTo(Movie movie)
-    {
-        return this.rating - movie.rating;
+
+    public int getRating() {
+        return rating;
     }
- 
-    // Getter methods for accessing private data
-    public int getRating() { return rating; }
-    public String getName()   {  return name; }
-    public int getYear()      {  return year;  }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    @Override
+    public int compareTo(Movie o) {
+        // TODO Auto-generated method stub
+        return this.getYear() - o.getYear();
+    }
+    
 }
  
 class Main

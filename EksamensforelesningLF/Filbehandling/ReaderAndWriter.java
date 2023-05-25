@@ -16,7 +16,7 @@ public class ReaderAndWriter {
         }
         reader.close();
 
-        //BufferedWriter writer = new BufferedWriter(new FileWriter("minegenkode/src/main/java/Eksamensforelesning/Filbehandling/ExampleFile.txt"));
+        //BufferedWriter writer = new BufferedWriter(new FileWriter("EksamensforelesningLF/Filbehandling/ExampleFile.txt"));
         //String text = "Dette har vi skrevet til fil";
         //writer.write(text);
         //writer.close();

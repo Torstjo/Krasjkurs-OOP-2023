@@ -9,7 +9,7 @@ public class Route implements Iterable<Post> {
     
     // TODO: necessary fields and initialisation
 
-	List<Post> routePosts = new ArrayList<>();
+	private final List<Leg> legs = new ArrayList<>();
 
 	/**
 	 * Initializes this route with the provided posts.
@@ -17,9 +17,16 @@ public class Route implements Iterable<Post> {
 	 * @param posts the posts in-order
 	 */
 	public Route(final Iterator<Post> posts) {
-		// TODO: initialisation
+		Post previous = null;
 		while (posts.hasNext()) {
-			this.routePosts.add(posts.next());
+			final Post next = posts.next();
+			if (previous != null) {
+				legs.add(new Leg(previous, next));
+			}
+			previous = next;
+		}
+		if (legs.size() < 2) {
+			throw new IllegalArgumentException("Must have at least two legs");
 		}
 	}
 
@@ -29,12 +36,7 @@ public class Route implements Iterable<Post> {
 	 * @param posts the posts in-order
 	 */
 	public Route(final Iterable<Post> posts) {
-		// TODO: initialisation
-		Iterator<Post> iterator = posts.iterator();
-
-		while (iterator.hasNext()) {
-			this.routePosts.add(iterator.next());
-		}
+		this(posts.iterator());
 	}
 
 	/**
@@ -43,10 +45,7 @@ public class Route implements Iterable<Post> {
 	 * @param posts the posts in-order
 	 */
 	public Route(final Collection<Post> posts) {
-		// TODO: initialisation
-		for (Post post : posts) {
-			this.routePosts.add(post);
-		}
+		this(posts.iterator());
 	}
 
 	/**
@@ -55,8 +54,7 @@ public class Route implements Iterable<Post> {
 	 * @return the number of legs
 	 */
 	public int getLegCount() {
-		// TODO
-		return routePosts.size()-1;
+		return legs.size();
 	}
 
 	/**
@@ -66,8 +64,7 @@ public class Route implements Iterable<Post> {
 	 * @return the leg with the specified number
 	 */
 	public Leg getLeg(final int num) {
-		// TODO
-		return new Leg(routePosts.get(num-1),routePosts.get(num));
+		return legs.get(num);
 	}
 
 	/**
@@ -75,8 +72,22 @@ public class Route implements Iterable<Post> {
 	 */
 	@Override
 	public Iterator<Post> iterator() {
-		// TODO
-		return routePosts.iterator();
+		return new Iterator<Post>() {
+
+			private int pos = -1;
+
+			@Override
+			public boolean hasNext() {
+				return legs.size() > 0 && (pos < 0 || pos < legs.size());
+			}
+
+			@Override
+			public Post next() {
+				final Post next = (pos < 0 ? legs.get(0).getStartPost() : legs.get(pos).getEndPost());
+				pos++;
+				return next;
+			}
+		};
 	}
 
 	/**
@@ -85,13 +96,7 @@ public class Route implements Iterable<Post> {
 	 * @return the total distance of this route
 	 */
 	public double distance() {
-		// TODO
-		double distance = 0;
-		for (int i = 0; i < routePosts.size()-1; i++) {
-			distance += getLeg(i).distance();
-		}
-
-		return distance;
+		return distance(iterator());
 	}
 
 	//
@@ -103,8 +108,7 @@ public class Route implements Iterable<Post> {
 	 * @return the total distance of this sequence of posts
 	 */
 	public static double distance(final Iterable<Post> posts) {
-		// TODO
-		return new Route(posts).distance();
+		return distance(posts.iterator());
 	}
 
 	/**
@@ -114,14 +118,14 @@ public class Route implements Iterable<Post> {
 	 * @return the total distance of this sequence of posts
 	 */
 	public static double distance(final Iterator<Post> posts) {
-		// TODO
-		return new Route(posts).distance();
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return routePosts.toString();
+		double distance = 0.0;
+		Post previous = posts.next();
+		while (posts.hasNext()) {
+			final Post next = posts.next();
+			distance += Post.distance(previous, next);
+			previous = next;
+		}
+		return distance;
 	}
 
 }

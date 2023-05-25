@@ -10,7 +10,7 @@ public class NioFile {
     
     public static void main(String[] args) throws IOException {
         
-        Path path = Paths.get("minegenkode/src/main/java/Eksamensforelesning/Filbehandling/ExampleFile.txt");
+        Path path = Paths.get("Eksamensforelesning/Filbehandling/ExampleFile.txt");
         String str = "Dette er et eksempel på å skrive med Files\nLinje 2";
         byte[] bs = str.getBytes();
         Files.write(path, bs);
